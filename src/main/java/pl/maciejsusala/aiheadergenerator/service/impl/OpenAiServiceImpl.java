@@ -7,6 +7,8 @@ import com.theokanning.openai.service.OpenAiService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.maciejsusala.aiheadergenerator.dto.FormDataDTO;
+import pl.maciejsusala.aiheadergenerator.dto.HeaderResponseDTO;
 import pl.maciejsusala.aiheadergenerator.service.OpenAiServiceInterface;
 
 import java.util.ArrayList;
@@ -27,16 +29,18 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
     }
 
     @Override
-    public List<String> createPrompts(String formField1, String formField2, String formField3) {
-        if (formField1 == null || formField2 == null || formField3 == null) {
+    public HeaderResponseDTO generateHeaders(FormDataDTO formData) {
+        if (formData.formField1() == null || formData.formField2() == null || formData.formField3() == null) {
             throw new IllegalArgumentException("Form fields cannot be null");
         }
 
-        if(formField1.isEmpty() || formField2.isEmpty() || formField3.isEmpty()) {
+        if(formData.formField1().isEmpty() || formData.formField2().isEmpty() || formData.formField3().isEmpty()) {
             throw new IllegalArgumentException("Form fields cannot be empty");
         }
-        List<String> prompts = getStrings(formField1, formField2, formField3);
-        return prompts;
+
+        List<String> prompts = getStrings(formData.formField1(), formData.formField2(), formData.formField3());
+        List<String> headers = generateHeadersFromPrompts(prompts);
+        return new HeaderResponseDTO(headers);
     }
 
     private static @NotNull List<String> getStrings(String formField1, String formField2, String formField3) {
@@ -50,8 +54,7 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
         return prompts;
     }
 
-    @Override
-    public List<String> generateHeaders(List<String> prompts) {
+    public List<String> generateHeadersFromPrompts(List<String> prompts) {
         if (prompts == null || prompts.isEmpty()) {
             throw new IllegalArgumentException("Prompts list cannot be null or empty");
         }
