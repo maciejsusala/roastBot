@@ -4,7 +4,7 @@ import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.maciejsusala.aiheadergenerator.dto.FormDataDTO;
@@ -13,6 +13,7 @@ import pl.maciejsusala.aiheadergenerator.service.OpenAiServiceInterface;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class OpenAiServiceImpl implements OpenAiServiceInterface {
@@ -23,10 +24,6 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
         this.openAiService = new OpenAiService(openAiKey);
     }
 
-    // Constructor for testing purposes
-    public OpenAiServiceImpl(OpenAiService openAiService) {
-        this.openAiService = openAiService;
-    }
 
     @Override
     public HeaderResponseDTO generateHeaders(FormDataDTO formData) {
@@ -48,9 +45,6 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
     }
 
     public List<String> generateHeadersFromPrompts(List<String> prompts) {
-        if (prompts == null || prompts.isEmpty()) {
-            throw new IllegalArgumentException("Prompts list cannot be null or empty");
-        }
         List<String> headers = new ArrayList<>();
         for (String prompt : prompts) {
             ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()

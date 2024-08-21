@@ -17,17 +17,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponseDTO handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult()
+        List<String> validationErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.toList());
-
         return new ErrorResponseDTO(
-                "Validation failed",
-                "Check 'validationErrors' for details",
+                "Validation error",
+                String.join(", ", validationErrors),
                 LocalDateTime.now(),
-                errors
+                validationErrors
         );
     }
 
