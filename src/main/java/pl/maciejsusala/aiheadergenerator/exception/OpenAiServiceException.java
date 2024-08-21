@@ -1,6 +1,7 @@
 package pl.maciejsusala.aiheadergenerator.exception;
 
-public class OpenAiServiceException extends RuntimeException {
+public class OpenAiServiceException extends ApplicationException {
+
     public OpenAiServiceException(String message) {
         super(message);
     }

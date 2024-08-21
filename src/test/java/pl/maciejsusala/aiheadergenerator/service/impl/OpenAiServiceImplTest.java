@@ -51,20 +51,6 @@ class OpenAiServiceImplTest {
     }
 
     @Test
-    void generateHeaders_nullInput() {
-        FormDataDTO formData = new FormDataDTO(null, "objection", "product");
-
-        assertThrows(IllegalArgumentException.class, () -> openAiServiceImpl.generateHeaders(formData));
-    }
-
-    @Test
-    void generateHeaders_emptyInput() {
-        FormDataDTO formData = new FormDataDTO("", "objection", "product");
-
-        assertThrows(IllegalArgumentException.class, () -> openAiServiceImpl.generateHeaders(formData));
-    }
-
-    @Test
     void generateHeadersFromPrompts_emptyPrompts() {
         assertThrows(IllegalArgumentException.class, () -> openAiServiceImpl.generateHeadersFromPrompts(Collections.emptyList()));
     }

@@ -30,23 +30,16 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
 
     @Override
     public HeaderResponseDTO generateHeaders(FormDataDTO formData) {
-        if (formData.formField1() == null || formData.formField2() == null || formData.formField3() == null) {
-            throw new IllegalArgumentException("Form fields cannot be null");
-        }
-
-        if(formData.formField1().isEmpty() || formData.formField2().isEmpty() || formData.formField3().isEmpty()) {
-            throw new IllegalArgumentException("Form fields cannot be empty");
-        }
-
         List<String> prompts = getStrings(formData.formField1(), formData.formField2(), formData.formField3());
         List<String> headers = generateHeadersFromPrompts(prompts);
         return new HeaderResponseDTO(headers);
     }
 
     private static @NotNull List<String> getStrings(String formField1, String formField2, String formField3) {
-        String promptPart1 = "Stwórz propozycję nagłówka, który przyciągnie uwagę odbiorcy, obiecując pokonanie OBIEKCJI i osiągnięcie CELU za pomocą PRODUKTU. Nagłówek powinien mieć nie więcej niż 15 wyrazów. CEL = ";
-        String promptPart2 = " OBIEKCJA = ";
-        String promptPart3 = " PRODUKT = ";
+        String promptPart1 = "Create a headline proposal that grabs the audience's attention by promising to " +
+                "overcome OBJECTIONS and achieve the GOAL with the PRODUCT. The headline should be no more than 15 words. GOAL = ";
+        String promptPart2 = " OBJECTION = ";
+        String promptPart3 = " PRODUCT = ";
         List<String> prompts = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             prompts.add(promptPart1 + formField1 + promptPart2 + formField2 + promptPart3 + formField3);
