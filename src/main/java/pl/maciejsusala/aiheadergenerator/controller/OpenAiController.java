@@ -1,9 +1,7 @@
 package pl.maciejsusala.aiheadergenerator.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.*;
 import pl.maciejsusala.aiheadergenerator.dto.FormDataDTO;
 import pl.maciejsusala.aiheadergenerator.dto.HeaderResponseDTO;
