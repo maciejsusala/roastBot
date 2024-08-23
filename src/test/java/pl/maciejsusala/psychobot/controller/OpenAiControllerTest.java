@@ -42,7 +42,6 @@ class OpenAiControllerTest {
                 {
                     "formField1": "goal",
                     "formField2": "objection",
-                    "formField3": "product"
                 }
                 """;
 

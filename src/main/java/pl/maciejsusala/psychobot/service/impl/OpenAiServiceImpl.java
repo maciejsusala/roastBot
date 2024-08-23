@@ -27,19 +27,20 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
 
     @Override
     public HeaderResponseDTO generateHeaders(FormDataDTO formData) {
-        List<String> prompts = getStrings(formData.formField1(), formData.formField2(), formData.formField3());
+        List<String> prompts = getStrings(formData.formField1(), formData.formField2());
         List<String> headers = generateHeadersFromPrompts(prompts);
         return new HeaderResponseDTO(headers);
     }
 
-    private static @NotNull List<String> getStrings(String formField1, String formField2, String formField3) {
-        String promptPart1 = "Create a headline proposal that grabs the audience's attention by promising to " +
-                "overcome OBJECTIONS and achieve the GOAL with the PRODUCT. The headline should be no more than 15 words. GOAL = ";
-        String promptPart2 = " OBJECTION = ";
-        String promptPart3 = " PRODUCT = ";
+    //TODO zmniejszyć ilość generowanych odpowiedzi do jednej
+    private static @NotNull List<String> getStrings(String formField1, String formField2) {
+            String promptPart1 = "Roast a user who shares a PROBLEM and REASON they can't fix this problem with you: /n " +
+                    "PROBLEM = ";
+        String promptPart2 = " REASON = ";
+        String promptPart3 = " Now roast the user in one sarcastic text with a lot of dark humor. Don’t be afraid to offend them.";
         List<String> prompts = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            prompts.add(promptPart1 + formField1 + promptPart2 + formField2 + promptPart3 + formField3);
+            prompts.add(promptPart1 + formField1 + promptPart2 + formField2 + promptPart3);
         }
         return prompts;
     }
