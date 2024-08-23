@@ -7,22 +7,30 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "login", nullable = false, unique = true)
     private String login;
 
-    //getters and setter must be used to transfer char[] to string
-    @Getter
-    @Setter
-    @Column(nullable = false)
-    private char[] password;
+    @Column(name = "password", nullable = false)
+    private String password;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.role == null) {
+            this.role = "USER";
+        }
+    }
 }
