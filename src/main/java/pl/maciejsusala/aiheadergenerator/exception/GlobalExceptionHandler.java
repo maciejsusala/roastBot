@@ -1,6 +1,7 @@
 package pl.maciejsusala.aiheadergenerator.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -50,5 +51,26 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now(),
                 null
         );
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDTO handleDuplicateUserException(DuplicateUserException ex) {
+        return new ErrorResponseDTO(
+                "Duplicate user error",
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return new ResponseEntity<>("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
