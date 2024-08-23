@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.maciejsusala</groupId>
-    <artifactId>AI-header-generator</artifactId>
+    <artifactId>PsychoBot</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>AI-header-generator</name>
     <description>Demo project for Spring Boot</description>
