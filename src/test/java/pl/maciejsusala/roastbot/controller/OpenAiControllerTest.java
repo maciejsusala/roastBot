@@ -39,7 +39,7 @@ class OpenAiControllerTest {
         String formDataJson = """
                 {
                     "formField1": "Problem",
-                    "formField2": "Reason",
+                    "formField2": "Reason"
                 }
                 """;
 
@@ -47,7 +47,11 @@ class OpenAiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
                 .andExpect(status().isOk())
-                .andExpect(content().json("String with roast"));
+                .andExpect(content().json("""
+                        {
+                            "roast": "You are roasted by AI"
+                        }
+                        """));
     }
 
     @Test
@@ -73,9 +77,16 @@ class OpenAiControllerTest {
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/openai/generate-header2")
+        mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void nonExistentEndpoint() throws Exception {
+        mockMvc.perform(post("/api/v1/openai/nonexistent")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
+import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -35,33 +36,32 @@ class OpenAiServiceImplTest {
     }
 
     @Test
-    void generateRoast() {
+    void generateRoast_validInput() {
         FormDataDTO formData = new FormDataDTO("Problem", "Reason");
         ChatCompletionChoice choice = new ChatCompletionChoice();
-        choice.setMessage(new ChatMessage("assistant", "prompt"));
+        choice.setMessage(new ChatMessage("assistant", "Generated Roast"));
         ChatCompletionResult result = new ChatCompletionResult();
         result.setChoices(List.of(choice));
 
         when(openAiService.createChatCompletion(any(ChatCompletionRequest.class))).thenReturn(result);
 
+        RoastResponseDTO roastResponse = openAiServiceImpl.generateRoast(formData);
 
-        String roast = openAiServiceImpl.generateRoastFromPrompt("prompt");
-
-        assertEquals("Generated Roast", roast);
+        assertEquals("Generated Roast", roastResponse.roast());
     }
 
     @Test
-    void generateRoastFromPrompt() {
+    void generateRoastFromPrompt_validInput() {
         String prompt = "prompt";
         ChatCompletionChoice choice = new ChatCompletionChoice();
-        choice.setMessage(new ChatMessage("assistant", "Generated Header"));
+        choice.setMessage(new ChatMessage("assistant", "Generated Roast"));
         ChatCompletionResult result = new ChatCompletionResult();
-        result.setChoices(List.of(choice)); // Mocking single choice
+        result.setChoices(List.of(choice));
 
         when(openAiService.createChatCompletion(any(ChatCompletionRequest.class))).thenReturn(result);
 
         String roast = openAiServiceImpl.generateRoastFromPrompt(prompt);
 
-        assertEquals("Generated roast", roast);
+        assertEquals("Generated Roast", roast);
     }
 }
