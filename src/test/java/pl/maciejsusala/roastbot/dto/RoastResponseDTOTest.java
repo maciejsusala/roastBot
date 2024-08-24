@@ -23,7 +23,7 @@ class RoastResponseDTOTest {
 
     @Test
     void whenHeadersAreValid_thenNoConstraintViolations() {
-        RoastResponseDTO headerResponse = new RoastResponseDTO(List.of("Header 1", "Header 2"));
+        RoastResponseDTO headerResponse = new RoastResponseDTO("Roast");
         Set<jakarta.validation.ConstraintViolation<RoastResponseDTO>> violations = validator.validate(headerResponse);
         assertEquals(0, violations.size());
     }
@@ -37,7 +37,7 @@ class RoastResponseDTOTest {
 
     @Test
     void whenHeadersAreEmpty_thenNoConstraintViolations() {
-        RoastResponseDTO headerResponse = new RoastResponseDTO(List.of());
+        RoastResponseDTO headerResponse = new RoastResponseDTO("");
         Set<jakarta.validation.ConstraintViolation<RoastResponseDTO>> violations = validator.validate(headerResponse);
         assertEquals(1, violations.size());
     }

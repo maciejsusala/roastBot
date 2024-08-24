@@ -22,21 +22,21 @@ class FormDataDTOTest {
 
     @Test
     void whenAllFieldsAreValid_thenNoConstraintViolations() {
-        FormDataDTO formData = new FormDataDTO("goal", "objection", "product");
+        FormDataDTO formData = new FormDataDTO("Problem", "Reason");
         Set<jakarta.validation.ConstraintViolation<FormDataDTO>> violations = validator.validate(formData);
         assertEquals(0, violations.size());
     }
 
     @Test
     void whenFieldIsNull_thenOneConstraintViolation() {
-        FormDataDTO formData = new FormDataDTO(null, "objection", "product");
+        FormDataDTO formData = new FormDataDTO(null, "Reason");
         Set<jakarta.validation.ConstraintViolation<FormDataDTO>> violations = validator.validate(formData);
         assertEquals(2, violations.size());
     }
 
     @Test
     void whenFieldIsBlank_thenOneConstraintViolation() {
-        FormDataDTO formData = new FormDataDTO("", "objection", "product");
+        FormDataDTO formData = new FormDataDTO("", "Reason");
         Set<jakarta.validation.ConstraintViolation<FormDataDTO>> violations = validator.validate(formData);
         assertEquals(1, violations.size());
     }

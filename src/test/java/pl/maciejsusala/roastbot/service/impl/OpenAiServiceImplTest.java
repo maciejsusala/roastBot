@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
-import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -23,7 +22,6 @@ class OpenAiServiceImplTest {
 
     @Mock
     private OpenAiService openAiService;
-
     private OpenAiServiceImpl openAiServiceImpl;
 
     @BeforeEach
@@ -37,23 +35,24 @@ class OpenAiServiceImplTest {
     }
 
     @Test
-    void generateHeaders() {
-        FormDataDTO formData = new FormDataDTO("goal", "objection", "product");
+    void generateRoast() {
+        FormDataDTO formData = new FormDataDTO("Problem", "Reason");
         ChatCompletionChoice choice = new ChatCompletionChoice();
-        choice.setMessage(new ChatMessage("assistant", "Generated Header"));
+        choice.setMessage(new ChatMessage("assistant", "prompt"));
         ChatCompletionResult result = new ChatCompletionResult();
-        result.setChoices(List.of(choice, choice, choice)); // Mocking multiple choices
+        result.setChoices(List.of(choice));
 
         when(openAiService.createChatCompletion(any(ChatCompletionRequest.class))).thenReturn(result);
 
-        RoastResponseDTO response = openAiServiceImpl.generateHeaders(formData);
 
-        assertEquals(List.of("Generated Header", "Generated Header", "Generated Header"), response.headers());
+        String roast = openAiServiceImpl.generateRoastFromPrompt("prompt");
+
+        assertEquals("Generated Roast", roast);
     }
 
     @Test
     void generateRoastFromPrompt() {
-        List<String> prompts = List.of("prompt1", "prompt2", "prompt3");
+        String prompt = "prompt";
         ChatCompletionChoice choice = new ChatCompletionChoice();
         choice.setMessage(new ChatMessage("assistant", "Generated Header"));
         ChatCompletionResult result = new ChatCompletionResult();
@@ -61,8 +60,8 @@ class OpenAiServiceImplTest {
 
         when(openAiService.createChatCompletion(any(ChatCompletionRequest.class))).thenReturn(result);
 
-        List<String> headers = openAiServiceImpl.generateRoastFromPrompt(prompts);
+        String roast = openAiServiceImpl.generateRoastFromPrompt(prompt);
 
-        assertEquals(List.of("Generated Header", "Generated Header", "Generated Header"), headers);
+        assertEquals("Generated roast", roast);
     }
 }

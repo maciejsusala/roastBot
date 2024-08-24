@@ -25,7 +25,7 @@ public class OpenAiServiceImpl implements OpenAiServiceInterface {
 
 
     @Override
-    public RoastResponseDTO generateHeaders(FormDataDTO formData) {
+    public RoastResponseDTO generateRoast(FormDataDTO formData) {
         String prompt = getPrompt(formData.formField1(), formData.formField2());
         String response = generateRoastFromPrompt(prompt);
         return new RoastResponseDTO(response);

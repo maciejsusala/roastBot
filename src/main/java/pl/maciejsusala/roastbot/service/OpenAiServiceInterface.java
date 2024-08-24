@@ -6,5 +6,5 @@ import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
 // This allows for flexibility in swapping implementations.
 
 public interface OpenAiServiceInterface {
-    RoastResponseDTO generateHeaders(FormDataDTO formData);
+    RoastResponseDTO generateRoast(FormDataDTO formData);
 }

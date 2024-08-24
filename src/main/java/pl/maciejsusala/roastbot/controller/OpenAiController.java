@@ -16,11 +16,10 @@ public class OpenAiController {
     private final OpenAiServiceInterface openAiService;
 
 
-    //TODO poprawić nazwę odnośnika na roast
     //TODO coś się stało z obsługą błędu strona nie istnieje wywala internala 500
-    @PostMapping("/generate-header2")
+    @PostMapping("/roast")
     public ResponseEntity<String> generateRoast(@Valid @RequestBody FormDataDTO formData) {
-        RoastResponseDTO headerResponse = openAiService.generateHeaders(formData);
+        RoastResponseDTO headerResponse = openAiService.generateRoast(formData);
         return ResponseEntity.ok(headerResponse.roast());
     }
 }

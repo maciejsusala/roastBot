@@ -12,8 +12,6 @@ import pl.maciejsusala.roastbot.dto.FormDataDTO;
 import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
 import pl.maciejsusala.roastbot.service.OpenAiServiceInterface;
 
-import java.util.List;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,38 +30,35 @@ class OpenAiControllerTest {
 
     @BeforeEach
     void setUp() {
-        when(openAiService.generateHeaders(any(FormDataDTO.class)))
-                .thenReturn(new RoastResponseDTO(List.of("Generated Header 1", "Generated Header 2", "Generated Header 3")));
+        when(openAiService.generateRoast(any(FormDataDTO.class)))
+                .thenReturn(new RoastResponseDTO("You are roasted by AI"));
     }
 
     @Test
     void generateRoast_validInput() throws Exception {
         String formDataJson = """
                 {
-                    "formField1": "goal",
-                    "formField2": "objection",
+                    "formField1": "Problem",
+                    "formField2": "Reason",
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/openai/generate-header2")
+        mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
                 .andExpect(status().isOk())
-                .andExpect(content().json("""
-                        ["Generated Header 1", "Generated Header 2", "Generated Header 3"]
-                        """));
+                .andExpect(content().json("String with roast"));
     }
 
     @Test
     void generateRoast_missingRequiredField() throws Exception {
         String formDataJson = """
                 {
-                    "formField1": "goal",
-                    "formField2": "objection"
+                    "formField1": "Problem"
                 }
                 """;
 
-        mockMvc.perform(post("/api/v1/openai/generate-header2")
+        mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
                 .andExpect(status().isBadRequest());
@@ -73,9 +68,8 @@ class OpenAiControllerTest {
     void generateRoast_emptyField() throws Exception {
         String formDataJson = """
                 {
-                    "formField1": "goal",
-                    "formField2": "",
-                    "formField3": "product"
+                    "formField1": "Problem",
+                    "formField2": ""
                 }
                 """;
 
