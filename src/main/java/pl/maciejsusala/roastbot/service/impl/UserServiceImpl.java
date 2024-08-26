@@ -8,6 +8,7 @@ import pl.maciejsusala.roastbot.dto.UserDTO;
 import pl.maciejsusala.roastbot.exception.DuplicateUserException;
 import pl.maciejsusala.roastbot.exception.UserNotFoundException;
 import pl.maciejsusala.roastbot.model.UserModel;
+import pl.maciejsusala.roastbot.model.UserRole;
 import pl.maciejsusala.roastbot.repository.UserRepository;
 import pl.maciejsusala.roastbot.service.UserServiceInterface;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserServiceInterface {
     public UserDTO addUser(UserDTO userDTO) {
         log.info("Adding new user with details {}", userDTO);
         UserModel user = objectMapper.convertValue(userDTO, UserModel.class);
+        if (userDTO.role() != null && !userDTO.role().equals(UserRole.USER) && !userDTO.role().equals(UserRole.ADMIN)) {
+            throw new IllegalArgumentException("Invalid role");
+        }
         if (userRepository.existsByLogin(userDTO.login())) {
             throw new DuplicateUserException("Login already exists: " + userDTO.login());
         }

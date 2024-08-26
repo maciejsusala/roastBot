@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import pl.maciejsusala.roastbot.model.UserRole;
 
 import java.io.Serializable;
 
@@ -29,6 +30,6 @@ public record UserDTO(
         String email,
 
         @Getter
-        String role
+        UserRole role
 ) implements Serializable {
 }
