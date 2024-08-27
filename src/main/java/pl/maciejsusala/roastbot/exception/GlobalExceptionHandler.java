@@ -1,5 +1,6 @@
 package pl.maciejsusala.roastbot.exception;
 
+import io.jsonwebtoken.security.InvalidKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
