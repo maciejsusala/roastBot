@@ -1,0 +1,159 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1250"> 
+  <title>Coverage Report > OpenAiServiceImpl</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.maciejsusala.roastbot.service.impl</a>
+</div>
+
+<h1>Coverage Summary for Class: OpenAiServiceImpl (pl.maciejsusala.roastbot.service.impl)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">OpenAiServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (18/18)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.maciejsusala.roastbot.service.impl;
+&nbsp;
+&nbsp;import com.theokanning.openai.completion.chat.ChatCompletionChoice;
+&nbsp;import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+&nbsp;import com.theokanning.openai.completion.chat.ChatMessage;
+&nbsp;import com.theokanning.openai.service.OpenAiService;
+&nbsp;import jakarta.validation.constraints.NotNull;
+&nbsp;import org.springframework.beans.factory.annotation.Value;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import pl.maciejsusala.roastbot.dto.FormDataDTO;
+&nbsp;import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
+&nbsp;import pl.maciejsusala.roastbot.service.OpenAiServiceInterface;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;
+&nbsp;@Service
+&nbsp;public class OpenAiServiceImpl implements OpenAiServiceInterface {
+&nbsp;
+&nbsp;    private final OpenAiService openAiService;
+&nbsp;
+<b class="fc">&nbsp;    public OpenAiServiceImpl(@Value(&quot;${OPENAI_KEY}&quot;) String openAiKey) {</b>
+<b class="fc">&nbsp;        this.openAiService = new OpenAiService(openAiKey);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public RoastResponseDTO generateRoast(FormDataDTO formData) {
+<b class="fc">&nbsp;        String prompt = getPrompt(formData.formField1(), formData.formField2());</b>
+<b class="fc">&nbsp;        String response = generateRoastFromPrompt(prompt);</b>
+<b class="fc">&nbsp;        return new RoastResponseDTO(response);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private static @NotNull String getPrompt(String formField1, String formField2) {
+<b class="fc">&nbsp;        String promptPart1 = &quot;Roast a user who shares a PROBLEM and REASON they can&#39;t fix this problem with you: /n &quot; +</b>
+&nbsp;                &quot;PROBLEM = &quot;;
+<b class="fc">&nbsp;        String promptPart2 = &quot; REASON = &quot;;</b>
+<b class="fc">&nbsp;        String promptPart3 = &quot; Now roast the user in one sarcastic text with a lot of dark humor. Don’t be afraid to offend them.&quot;;</b>
+<b class="fc">&nbsp;        return (promptPart1 + formField1 + promptPart2 + formField2 + promptPart3);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String generateRoastFromPrompt(String prompt) {
+&nbsp;
+<b class="fc">&nbsp;        ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()</b>
+<b class="fc">&nbsp;                .messages(List.of(new ChatMessage(&quot;user&quot;, prompt)))</b>
+<b class="fc">&nbsp;                .model(&quot;gpt-4o-mini&quot;)</b>
+<b class="fc">&nbsp;                .maxTokens(100)</b>
+<b class="fc">&nbsp;                .temperature(0.7)</b>
+<b class="fc">&nbsp;                .n(1)</b>
+<b class="fc">&nbsp;                .build();</b>
+<b class="fc">&nbsp;        ChatCompletionChoice choice = openAiService.createChatCompletion(completionRequest).getChoices().getFirst();</b>
+<b class="fc">&nbsp;        return choice.getMessage().getContent();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-24 15:33</div>
+</div>
+</body>
+</html>

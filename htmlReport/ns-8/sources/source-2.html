@@ -1,0 +1,78 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=windows-1250"> 
+  <title>Coverage Report > OpenAiServiceInterface</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">pl.maciejsusala.roastbot.service</a>
+</div>
+
+<h1>Coverage Summary for Class: OpenAiServiceInterface (pl.maciejsusala.roastbot.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">OpenAiServiceInterface</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package pl.maciejsusala.roastbot.service;
+&nbsp;import pl.maciejsusala.roastbot.dto.FormDataDTO;
+&nbsp;import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
+&nbsp;
+&nbsp;// I decide to use an interface to define the contract for OpenAI service operations.
+&nbsp;// This allows for flexibility in swapping implementations.
+&nbsp;
+&nbsp;public interface OpenAiServiceInterface {
+&nbsp;    RoastResponseDTO generateRoast(FormDataDTO formData);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-08-24 15:33</div>
+</div>
+</body>
+</html>

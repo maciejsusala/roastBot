@@ -34,20 +34,21 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken (UserDetails userDetails) {
-        logger.info("Generating token for user: {}", userDetails.getUsername());
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken (UserModel userModel) {
+        logger.info("Generating token for user: {}", userModel.getUsername());
+        return generateToken(new HashMap<>(), userModel);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails
+            UserModel userModel
     ) {
-        logger.info("Generating token with extra claims for user: {}", userDetails.getUsername());
+        logger.info("Generating token with extra claims for user: {}", userModel.getUsername());
+        extraClaims.put("role", userModel.getRole().name());
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(userModel.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -76,12 +77,14 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         logger.info("Extracting all claims from token: {}", token);
-        return Jwts
+        Claims claims = Jwts
                 .parserBuilder()
                 .setSigningKey(getSignInKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+        logger.info("Extracted claims: {}", claims);
+        return claims;
     }
 
     private Key getSignInKey() {
