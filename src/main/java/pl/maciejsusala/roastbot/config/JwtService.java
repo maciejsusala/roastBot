@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pl.maciejsusala.roastbot.model.UserModel;
 
 import java.security.Key;
 import java.util.Date;
@@ -86,8 +87,6 @@ public class JwtService {
     private Key getSignInKey() {
         logger.info("Getting signing key");
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        Key signingKey = Keys.hmacShaKeyFor(keyBytes);
-        logger.info("Signing key: {}", signingKey);
-        return signingKey;
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

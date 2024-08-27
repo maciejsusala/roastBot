@@ -31,6 +31,8 @@ public class UserModel implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
+    @Setter
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private UserRole role;

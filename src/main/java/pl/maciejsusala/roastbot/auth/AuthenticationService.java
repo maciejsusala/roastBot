@@ -24,8 +24,8 @@ public class AuthenticationService {
 
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
-        logger.info("Authenticating user with login: {}, password: {}",
-                authenticationRequest.getLogin(), authenticationRequest.getPassword());
+        logger.info("Authenticating user with login: {}",
+                authenticationRequest.getLogin());
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authenticationRequest.getLogin(),

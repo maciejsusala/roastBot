@@ -22,8 +22,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-
-
         http
                 .cors(cors -> cors
                         .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
@@ -31,6 +29,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(matcherRegistry -> matcherRegistry
                         .requestMatchers("/api/v1/openai/auth/login").permitAll()
+                        .requestMatchers("/api/v1/openai/user/add-user").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement -> sessionManagement
