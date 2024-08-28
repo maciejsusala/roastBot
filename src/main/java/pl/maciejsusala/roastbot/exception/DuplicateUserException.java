@@ -1,6 +1,7 @@
 package pl.maciejsusala.roastbot.exception;
 
-public class DuplicateUserException extends RuntimeException {
+public class DuplicateUserException extends ApplicationException {
+
     public DuplicateUserException(String message) {
         super(message);
     }

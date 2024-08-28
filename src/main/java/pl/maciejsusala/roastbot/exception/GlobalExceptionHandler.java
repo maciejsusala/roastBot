@@ -1,8 +1,8 @@
 package pl.maciejsusala.roastbot.exception;
 
-import io.jsonwebtoken.security.InvalidKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +16,17 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorResponseDTO> handleApplicationException(ApplicationException ex) {
+        ErrorResponseDTO errorResponse = new ErrorResponseDTO(
+                ex.getMessage(),
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -67,12 +78,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseDTO handleUserNotFoundException(UserNotFoundException ex) {
+        return new ErrorResponseDTO(
+                "Bad credentials",
+                ex.getMessage(),
+                LocalDateTime.now(),
+                null
+        );
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<String> handleBadCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseDTO handleBadCredentialsException(BadCredentialsException ex) {
+        return new ErrorResponseDTO(
+                ex.getMessage(),
+                "Incorrect password",
+                LocalDateTime.now(),
+                null
+        );
     }
 }

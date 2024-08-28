@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
 import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
@@ -35,6 +36,7 @@ class OpenAiControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "USER")
     void generateRoast_validInput() throws Exception {
         String formDataJson = """
                 {
@@ -55,6 +57,7 @@ class OpenAiControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "USER")
     void generateRoast_missingRequiredField() throws Exception {
         String formDataJson = """
                 {
@@ -69,6 +72,7 @@ class OpenAiControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "USER")
     void generateRoast_emptyField() throws Exception {
         String formDataJson = """
                 {
@@ -84,6 +88,7 @@ class OpenAiControllerTest {
     }
 
     @Test
+    @WithMockUser(authorities = "USER")
     void nonExistentEndpoint() throws Exception {
         mockMvc.perform(post("/api/v1/openai/nonexistent")
                         .contentType(MediaType.APPLICATION_JSON))
