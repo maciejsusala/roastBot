@@ -9,7 +9,6 @@ import pl.maciejsusala.roastbot.dto.UserDTO;
 import pl.maciejsusala.roastbot.exception.DuplicateUserException;
 import pl.maciejsusala.roastbot.exception.UserNotFoundException;
 import pl.maciejsusala.roastbot.model.UserModel;
-import pl.maciejsusala.roastbot.model.UserRole;
 import pl.maciejsusala.roastbot.repository.UserRepository;
 import pl.maciejsusala.roastbot.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +28,6 @@ public class UserServiceImpl implements UserService {
     public UserDTO addUser(UserDTO userDTO) {
         log.info("Adding new user with details {}", userDTO);
         UserModel user = objectMapper.convertValue(userDTO, UserModel.class);
-        validateAdminRole(userDTO.role());
         checkDuplicateLogin(userDTO.login());
         checkDuplicateEmail(userDTO.email());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,12 +42,6 @@ public class UserServiceImpl implements UserService {
         UserModel user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " +id));
         userRepository.delete(user);
-    }
-
-    private void validateAdminRole(UserRole role) {
-        if (role != null && !role.equals(UserRole.USER) && !role.equals(UserRole.ADMIN)) {
-            throw new IllegalArgumentException("Invalid role");
-        }
     }
 
     private void checkDuplicateLogin(String login) {
