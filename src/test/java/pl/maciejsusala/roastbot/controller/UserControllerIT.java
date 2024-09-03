@@ -12,7 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.maciejsusala.roastbot.dto.UserDTO;
 import pl.maciejsusala.roastbot.model.UserRole;
-import pl.maciejsusala.roastbot.service.UserServiceInterface;
+import pl.maciejsusala.roastbot.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -23,13 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class UserControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserServiceInterface userService;
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
@@ -39,6 +39,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     void addUser_validInputWithRole() throws Exception {
+        //when
         UserDTO userDTO = new UserDTO(1L, "JohnDoe", "password123", "john.doe@example.com", UserRole.ADMIN);
         when(userService.addUser(any(UserDTO.class))).thenReturn(userDTO);
 
@@ -55,6 +56,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/openai/user/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
+                //then
                 .andExpect(status().isCreated())
                 .andExpect(content().json(userJson));
     }
@@ -62,6 +64,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     void addUser_invalidRole() throws Exception {
+        //when
         String userJson = """
             {
                 "id": 1,
@@ -71,16 +74,17 @@ class UserControllerTest {
                 "role": "INVALID_ROLE"
             }
             """;
-
         mockMvc.perform(post("/api/v1/openai/user/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
+                //then
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(authorities = "ADMIN")
     void addUser_existingLogin() throws Exception {
+        //when
         UserDTO userDTO = new UserDTO(1L, "JohnDoe", "password123", "john.doe@example.com", UserRole.USER);
         when(userService.addUser(any(UserDTO.class))).thenThrow(new IllegalArgumentException("Login already exists"));
 
@@ -97,6 +101,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/openai/user/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
+                //then
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("""
                     {
@@ -109,6 +114,7 @@ class UserControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     void addUser_existingEmail() throws Exception {
+        //when
         UserDTO userDTO = new UserDTO(1L, "JohnDoe", "password123", "john.doe@example.com", UserRole.USER);
         when(userService.addUser(any(UserDTO.class))).thenThrow(new IllegalArgumentException("Email already exists"));
 
@@ -125,6 +131,7 @@ class UserControllerTest {
         mockMvc.perform(post("/api/v1/openai/user/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
+                //then
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json("""
                     {
@@ -137,16 +144,19 @@ class UserControllerTest {
     @Test
     @WithMockUser(authorities = "ADMIN")
     void deleteUser_validId() throws Exception {
+        //when
         Long userId = 1L;
         doNothing().when(userService).deleteUser(userId);
 
         mockMvc.perform(post("/api/v1/openai/user/delete-user/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
+                //then
                 .andExpect(status().isOk());
     }
     @Test
     @WithMockUser(authorities = "USER")
     void addUser_asUser_shouldReturnForbidden() throws Exception {
+        //when
         String userJson = """
             {
                 "id": 1,
@@ -156,20 +166,23 @@ class UserControllerTest {
                 "role": "USER"
             }
             """;
-
         mockMvc.perform(post("/api/v1/openai/user/add-user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userJson))
+                //then
                 .andExpect(status().isForbidden());
     }
     @Test
     @WithMockUser(authorities = "USER")
     void deleteUser_asUser_shouldReturnForbidden() throws Exception {
+        //when
         Long userId = 1L;
         doNothing().when(userService).deleteUser(userId);
 
+
         mockMvc.perform(post("/api/v1/openai/user/delete-user/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
+                //then
                 .andExpect(status().isForbidden());
     }
 }

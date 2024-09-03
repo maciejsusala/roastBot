@@ -11,7 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
 import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
-import pl.maciejsusala.roastbot.service.OpenAiServiceInterface;
+import pl.maciejsusala.roastbot.service.RoastGenerationService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -21,33 +21,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class OpenAiControllerTest {
+class OpenAiControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private OpenAiServiceInterface openAiService;
+    private RoastGenerationService roastGenerationService;
 
     @BeforeEach
     void setUp() {
-        when(openAiService.generateRoast(any(FormDataDTO.class)))
+        when(roastGenerationService.generateRoast(any(FormDataDTO.class)))
                 .thenReturn(new RoastResponseDTO("You are roasted by AI"));
     }
 
     @Test
     @WithMockUser(authorities = "USER")
     void generateRoast_validInput() throws Exception {
+        //when
         String formDataJson = """
                 {
                     "formField1": "Problem",
                     "formField2": "Reason"
                 }
                 """;
-
         mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
+                //then
                 .andExpect(status().isOk())
                 .andExpect(content().json("""
                         {
@@ -59,39 +60,43 @@ class OpenAiControllerTest {
     @Test
     @WithMockUser(authorities = "USER")
     void generateRoast_missingRequiredField() throws Exception {
+        //when
         String formDataJson = """
                 {
                     "formField1": "Problem"
                 }
                 """;
-
         mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
+                //then
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(authorities = "USER")
     void generateRoast_emptyField() throws Exception {
+        //when
         String formDataJson = """
                 {
                     "formField1": "Problem",
                     "formField2": ""
                 }
                 """;
-
         mockMvc.perform(post("/api/v1/openai/roast")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(formDataJson))
+                //then
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser(authorities = "USER")
     void nonExistentEndpoint() throws Exception {
+        //when
         mockMvc.perform(post("/api/v1/openai/nonexistent")
                         .contentType(MediaType.APPLICATION_JSON))
+                //then
                 .andExpect(status().isNotFound());
     }
 }

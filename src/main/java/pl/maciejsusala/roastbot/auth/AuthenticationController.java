@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/openai/auth")
 @RequiredArgsConstructor
-public class authenticationController {
+public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 

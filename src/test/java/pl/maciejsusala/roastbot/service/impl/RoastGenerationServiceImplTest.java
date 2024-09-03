@@ -12,31 +12,27 @@ import org.mockito.MockitoAnnotations;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
 import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class OpenAiServiceImplTest {
+class RoastGenerationServiceImplTest {
 
     @Mock
     private OpenAiService openAiService;
-    private OpenAiServiceImpl openAiServiceImpl;
+    private RoastGenerationServiceImpl openAiServiceImpl;
 
     @BeforeEach
     void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        openAiServiceImpl = new OpenAiServiceImpl("superSecretKey");
-
-        Field field = OpenAiServiceImpl.class.getDeclaredField("openAiService");
-        field.setAccessible(true);
-        field.set(openAiServiceImpl, openAiService);
+        openAiServiceImpl = new RoastGenerationServiceImpl(openAiService);
     }
 
     @Test
     void generateRoast_validInput() {
+        //when
         FormDataDTO formData = new FormDataDTO("Problem", "Reason");
         ChatCompletionChoice choice = new ChatCompletionChoice();
         choice.setMessage(new ChatMessage("assistant", "Generated Roast"));
@@ -47,11 +43,13 @@ class OpenAiServiceImplTest {
 
         RoastResponseDTO roastResponse = openAiServiceImpl.generateRoast(formData);
 
+        //then
         assertEquals("Generated Roast", roastResponse.roast());
     }
 
     @Test
     void generateRoastFromPrompt_validInput() {
+        //when
         String prompt = "prompt";
         ChatCompletionChoice choice = new ChatCompletionChoice();
         choice.setMessage(new ChatMessage("assistant", "Generated Roast"));
@@ -62,6 +60,7 @@ class OpenAiServiceImplTest {
 
         String roast = openAiServiceImpl.generateRoastFromPrompt(prompt);
 
+        //then
         assertEquals("Generated Roast", roast);
     }
 }

@@ -3,24 +3,23 @@ package pl.maciejsusala.roastbot.service.impl;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.maciejsusala.roastbot.dto.FormDataDTO;
 import pl.maciejsusala.roastbot.dto.RoastResponseDTO;
-import pl.maciejsusala.roastbot.service.OpenAiServiceInterface;
+import pl.maciejsusala.roastbot.service.RoastGenerationService;
+import com.theokanning.openai.service.OpenAiService;
 
 import java.util.List;
 
 
 @Service
-public class OpenAiServiceImpl implements OpenAiServiceInterface {
+public class RoastGenerationServiceImpl implements RoastGenerationService {
 
     private final OpenAiService openAiService;
 
-    public OpenAiServiceImpl(@Value("${OPENAI_KEY}") String openAiKey) {
-        this.openAiService = new OpenAiService(openAiKey);
+    public RoastGenerationServiceImpl(OpenAiService openAiService) {
+        this.openAiService = openAiService;
     }
 
 

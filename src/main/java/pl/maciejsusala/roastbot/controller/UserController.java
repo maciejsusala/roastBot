@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pl.maciejsusala.roastbot.dto.UserDTO;
-import pl.maciejsusala.roastbot.service.UserServiceInterface;
+import pl.maciejsusala.roastbot.service.UserService;
 
 ;
 
@@ -14,16 +14,16 @@ import pl.maciejsusala.roastbot.service.UserServiceInterface;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceInterface userService;
+    private final UserService userService;
 
-    @PostMapping("add-user")
+    @PostMapping("/add-user")
     @ResponseStatus(HttpStatus.CREATED)
 
     public UserDTO addUser (@RequestBody @Valid UserDTO userDTO) {
         return userService.addUser(userDTO);
     }
 
-    @PostMapping("delete-user/{id}")
+    @PostMapping("/delete-user/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);

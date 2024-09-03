@@ -11,14 +11,14 @@ import pl.maciejsusala.roastbot.exception.UserNotFoundException;
 import pl.maciejsusala.roastbot.model.UserModel;
 import pl.maciejsusala.roastbot.model.UserRole;
 import pl.maciejsusala.roastbot.repository.UserRepository;
-import pl.maciejsusala.roastbot.service.UserServiceInterface;
+import pl.maciejsusala.roastbot.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserServiceInterface {
+public class UserServiceImpl implements UserService {
 
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
@@ -29,15 +29,9 @@ public class UserServiceImpl implements UserServiceInterface {
     public UserDTO addUser(UserDTO userDTO) {
         log.info("Adding new user with details {}", userDTO);
         UserModel user = objectMapper.convertValue(userDTO, UserModel.class);
-        if (userDTO.role() != null && !userDTO.role().equals(UserRole.USER) && !userDTO.role().equals(UserRole.ADMIN)) {
-            throw new IllegalArgumentException("Invalid role");
-        }
-        if (userRepository.existsByLogin(userDTO.login())) {
-            throw new DuplicateUserException("Login already exists: " + userDTO.login());
-        }
-        if (userRepository.existsByEmail(userDTO.email())) {
-            throw new DuplicateUserException("Email already exists: " + userDTO.email());
-        }
+        validateAdminRole(userDTO.role());
+        checkDuplicateLogin(userDTO.login());
+        checkDuplicateEmail(userDTO.email());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserModel savedUser = userRepository.save(user);
         return objectMapper.convertValue(savedUser, UserDTO.class);
@@ -50,5 +44,23 @@ public class UserServiceImpl implements UserServiceInterface {
         UserModel user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id " +id));
         userRepository.delete(user);
+    }
+
+    private void validateAdminRole(UserRole role) {
+        if (role != null && !role.equals(UserRole.USER) && !role.equals(UserRole.ADMIN)) {
+            throw new IllegalArgumentException("Invalid role");
+        }
+    }
+
+    private void checkDuplicateLogin(String login) {
+        if (userRepository.existsByLogin(login)) {
+            throw new DuplicateUserException("Login already exists: " + login);
+        }
+    }
+
+    private void checkDuplicateEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new DuplicateUserException("Email already exists: " + email);
+        }
     }
 }

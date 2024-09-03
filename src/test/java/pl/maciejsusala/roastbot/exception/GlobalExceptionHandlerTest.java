@@ -23,6 +23,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleValidationExceptions() {
+        //when
         MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(
@@ -33,6 +34,7 @@ class GlobalExceptionHandlerTest {
 
         ErrorResponseDTO response = globalExceptionHandler.handleValidationExceptions(ex);
 
+        //then
         assertEquals("Validation error", response.message());
         assertEquals("field1: defaultMessage1, field2: defaultMessage2", response.details());
         assertEquals(2, response.validationErrors().size());
@@ -40,20 +42,22 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void handleIllegalArgumentException() {
+        //when
         IllegalArgumentException ex = new IllegalArgumentException("Invalid argument");
-
         ErrorResponseDTO response = globalExceptionHandler.handleIllegalArgumentException(ex);
 
+        //then
         assertEquals("Invalid input", response.message());
         assertEquals("Invalid argument", response.details());
     }
 
     @Test
     void handleOpenAiServiceException() {
+        //when
         OpenAiServiceException ex = new OpenAiServiceException("Service error occurred");
-
         ErrorResponseDTO response = globalExceptionHandler.handleOpenAiServiceException(ex);
 
+        //then
         assertEquals("Service error", response.message());
         assertEquals("Service error occurred", response.details());
     }

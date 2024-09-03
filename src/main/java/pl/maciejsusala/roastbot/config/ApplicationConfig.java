@@ -1,6 +1,8 @@
 package pl.maciejsusala.roastbot.config;
 
+import com.theokanning.openai.service.OpenAiService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,11 @@ import pl.maciejsusala.roastbot.repository.UserRepository;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserRepository userRepository;
+
+    @Bean
+    public OpenAiService openAiService(@Value("${OPENAI_KEY}") String openAiKey) {
+        return new com.theokanning.openai.service.OpenAiService(openAiKey);
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -36,11 +43,8 @@ public class ApplicationConfig {
         return config.getAuthenticationManager();
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }
